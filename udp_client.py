@@ -2,7 +2,6 @@ import socket
 import sys
 import json
 
-register_cmd = {"command": "register", "username": ""}
 deregister_cmd = {"command": "deregister", "username": ""}
 msg_cmd = {"command": "msg", "username": "", "message": ""}
 ret_cmd = {"command": "ret_code", "code_no": 0}
@@ -12,9 +11,15 @@ codes = {201: "Command parameters incomplete",
     501: "User not registered",
     502: "User account exists"}
 
-def register():
-    pass
-
+def register(username):
+    register_cmd = {"command": "register", "username": username}
+    jsondata = json.dumps(register_cmd)
+    try:
+        print(f"Registering username {username}")
+        sent = sock.sendto(bytes(jsondata, "utf-8"), (server_host, dest_port))
+        data, server = sock.recvfrom(1024)
+        print(codes[data["code_no"]])
+    
 def deregister():
     pass
 
