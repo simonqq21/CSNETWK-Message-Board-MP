@@ -25,8 +25,8 @@ def deregister():
 def message():
     pass
 
-server_host = "172.16.11.59"
-dest_port = 12345
+server_host = "172.16.0.20"
+dest_port = 8003
 # server_host = input("Enter IP address of message board server: ")
 # dest_port = int(input("Enter port number of message board server: "))
 username = input("Enter preferred username: ")
