@@ -25,6 +25,7 @@ def deregister():
 def message():
     pass
 
+# temporary hardcoded values
 server_host = "172.16.0.20"
 dest_port = 8003
 # server_host = input("Enter IP address of message board server: ")
