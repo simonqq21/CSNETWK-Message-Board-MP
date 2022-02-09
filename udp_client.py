@@ -9,12 +9,18 @@ from common import commands, codes, code_definitions
 
 
 def register(username):
+    # create register command to be sent to server
     register_cmd = {"command": commands["register"], "username": username}
     jsondata = json.dumps(register_cmd)
     print(f"Registering username {username}")
     sent = sock.sendto(bytes(jsondata, "utf-8"), (server_host, dest_port))
     data, server = sock.recvfrom(1024)
-    print(codes[data["code_no"]])
+
+    #
+    if data["code_no"] == codes["USER_NOT_REGISTERED"]:
+        print("You have been registered!")
+    elif data["code_no"] == codes["USER_ALREADY_EXISTS"]:
+        print(f"Username {username} is already taken, please provide another unique username.")
 
 def deregister():
     pass

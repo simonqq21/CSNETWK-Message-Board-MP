@@ -17,5 +17,5 @@ code_definitions = {
     301: "Command unknown",
     401: "Command accepted",
     501: "User not registered",
-    502: "User account exists"
+    502: "User account already exists"
 }
