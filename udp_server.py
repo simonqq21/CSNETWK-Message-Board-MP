@@ -3,8 +3,8 @@ import json
 import sys
 
 # temporary hardcoded values
-server_host = "172.16.0.20"
-dest_port = 8003
+listening_address = "172.16.0.20"
+listening_port = 8003
 # listening_address = input("Enter listening IP address: ")
 # listening_port = input("Enter listening port number: ")
 # listening_port = int(listening_port)
