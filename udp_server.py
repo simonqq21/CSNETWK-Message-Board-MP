@@ -1,20 +1,35 @@
 import socket
-import json
 import sys
+import json
+from common import commands, codes, code_definitions
 
 
-listening_address = input("Enter listening IP address: ")
-listening_port = input("Enter listening port number: ")
-listening_port = int(listening_port)
+def register(username):
+    if username in users:
+        code = codes["USER_ALREADY_EXISTS"]
+        print(f"Username {username} already exists.")
+    else:
+        users.append(username)
+        code = codes["USER_NOT_REGISTERED"]
+        print(f"Username {username} just registered now.")
+
+    ret_cmd = {"command": "ret_code", "code_no": code}
+    print("Users in message board: ", users)
+
+    return ret_cmd
+
+
+def deregister():
+    pass
+
+
+# temporary hardcoded values
+listening_address = "172.16.0.20"
+listening_port = 8003
+# listening_address = input("Enter listening IP address: ")
+# listening_port = input("Enter listening port number: ")
+# listening_port = int(listening_port)
 users = []
-
-# 201 - parameters incomplete; 301 - command unkown; 401 - command accepted
-# 501 - user not registered; 502 - User account exists
-ret_codes = [{"command": "ret_code", "code_no": 201},
-             {"command": "ret_code", "code_no": 301},
-             {"command": "ret_code", "code_no": 401},
-             {"command": "ret_code", "code_no": 501},
-             {"command": "ret_code", "code_no": 502}]
 
 # Create socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -27,32 +42,13 @@ print("\nServer has started. Waiting for new messages.")
 while True:
     # Waiting for data to arrive
     data, address = sock.recvfrom(1024)
-    print("#############")
-    print("Data sent: ")
-    print(data)
-    print("Type of data: ", type(data))
-    print("#############")
-    data_sent = json.loads(data)
-    print("#############")
-    print("Data sent: ")
-    print(data_sent)
-    print("Type of data: ", type(data_sent))
-    print("#############")
+    # print(data)
+    temp = json.loads(data)
 
-    if data:
-        cmd = data_sent['command']
-        uname = data_sent['username']
-        print("Address: \n", address)
+    # get command and perform action
+    command = temp["command"]
+    if command == "register":
+        newUsername = temp['username']
+        ret_cmd = register(newUsername)
 
-        if cmd == "register":
-            users.append(uname)
-            print("Users in message board: ", users)
-            jsondata = json.dumps(ret_codes[2])
-            sent = sock.sendto(bytes(jsondata, "utf-8"), address)
-
-        if cmd == "deregister":
-            print("User %s exiting...", uname)
-            users.remove(uname)
-            print("Users in message board: ", users)
-            jsondata = json.dumps(ret_codes[2])
-            sent = sock.sendto(bytes(jsondata, "utf-8"), address)
+    if
