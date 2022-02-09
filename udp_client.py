@@ -1,10 +1,8 @@
 import socket
 import sys
 import json
-from common import commands, codes, code_definitions
+from common import commands, codes, code_definitions, deregister_message
 
-# deregister_cmd = {"command": "deregister", "username": ""}
-# msg_cmd = {"command": "msg", "username": "", "message": ""}
 # ret_cmd = {"command": "ret_code", "code_no": 0}
 
 
@@ -16,17 +14,36 @@ def register(username):
     sent = sock.sendto(bytes(jsondata, "utf-8"), (server_host, dest_port))
     data, server = sock.recvfrom(1024)
 
-    #
-    if data["code_no"] == codes["USER_NOT_REGISTERED"]:
-        print("You have been registered!")
-    elif data["code_no"] == codes["USER_ALREADY_EXISTS"]:
-        print(f"Username {username} is already taken, please provide another unique username.")
+    returnedCmd = json.loads(data)
+    # interpret the returned code from the server
+    if returnedCmd["code_no"] == codes["USER_ALREADY_EXISTS"]:
+        print(f"User account already exists in chatroom!")
+        return 666
+    elif returnedCmd["code_no"] == codes["USER_NOT_REGISTERED"]:
+        print("Registered successfully!")
+    return 0
 
-def deregister():
-    pass
+def deregister(username):
+    # create deregister command to be sent to server
+    deregister_cmd = {"command": commands["deregister"], "username": username}
+    jsondata = json.dumps(deregister_cmd)
+    print(f"Deregistering username {username}")
+    sent = sock.sendto(bytes(jsondata, "utf-8"), (server_host, dest_port))
+    data, server = sock.recvfrom(1024)
 
-def message():
-    pass
+
+def send_message(username, message):
+    if message == deregister_message:
+        return
+    # create message command to be sent to server
+    msg_cmd = {"command": commands["message"], "username": username, "message": message}
+    jsondata = json.dumps(msg_cmd)
+    print(f"Sending message")
+    sent = sock.sendto(bytes(jsondata, "utf-8"), (server_host, dest_port))
+    data, server = sock.recvfrom(1024)
+
+
+
 
 # temporary hardcoded values
 server_host = "172.16.0.20"
@@ -36,4 +53,12 @@ dest_port = 8003
 username = input("Enter preferred username: ")
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-register(username)
+result = register(username)
+# continue if registration successful, exit otherwise
+if result == 0:
+    message = ""
+    while message != deregister_message:
+        message = input("Enter message: ")
+        send_message(username, message)
+
+deregister(username)

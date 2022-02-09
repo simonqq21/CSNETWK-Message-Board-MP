@@ -51,4 +51,4 @@ while True:
         newUsername = temp['username']
         ret_cmd = register(newUsername)
         jsondata = json.dumps(ret_cmd)
-        sent = sock.sendto(bytes(jsondata, "utf-8"))
+        sent = sock.sendto(bytes(jsondata, "utf-8"), address)
