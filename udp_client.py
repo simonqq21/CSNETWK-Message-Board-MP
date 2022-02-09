@@ -1,7 +1,7 @@
 import socket
 import sys
 import json
-from common import commands, codes
+from common import commands, codes, code_definitions
 
 # deregister_cmd = {"command": "deregister", "username": ""}
 # msg_cmd = {"command": "msg", "username": "", "message": ""}
@@ -9,7 +9,7 @@ from common import commands, codes
 
 
 def register(username):
-    register_cmd = {"command": "register", "username": username}
+    register_cmd = {"command": commands["register"], "username": username}
     jsondata = json.dumps(register_cmd)
     print(f"Registering username {username}")
     sent = sock.sendto(bytes(jsondata, "utf-8"), (server_host, dest_port))

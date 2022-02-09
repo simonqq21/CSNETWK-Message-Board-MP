@@ -1,14 +1,19 @@
 import socket
 import sys
 import json
-from common import commands, codes
+from common import commands, codes, code_definitions
 
 def register(username):
     if username in users:
-
-        ret_cmd = {"command": "ret_code", "code_no": 0}
-    users.append(username)
+        code = codes["USER_ALREADY_EXISTS"]
+        print(f"Username {username} already exists.")
+    else"
+        users.append(username)
+        code=codes["USER_NOT_REGISTERED"]
+        print(f"Username {username} just registered now.")
+    ret_cmd = {"command": "ret_code", "code_no": code}
     print("Users in message board: ", users)
+
 
 
 def deregister():
