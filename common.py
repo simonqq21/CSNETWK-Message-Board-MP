@@ -19,3 +19,5 @@ code_definitions = {
     501: "User not registered",
     502: "User account already exists"
 }
+
+deregister_message = 'bye'
