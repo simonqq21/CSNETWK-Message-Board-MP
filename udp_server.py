@@ -3,8 +3,6 @@ import sys
 import json
 from common import commands, codes, code_definitions
 
-# This function performs the registration operation of the application
-
 
 def register(username, users):
 
@@ -25,8 +23,6 @@ def register(username, users):
     print("Users in message board: ", users)
 
     return ret_cmd
-
-# This function performs the deregistration of an account in the apprlication
 
 
 def deregister(username, users):
@@ -49,8 +45,16 @@ def deregister(username, users):
     return ret_cmd
 
 
-def msg():
-    pass
+def msg(username, message):
+    if message:
+        code = codes["COMMAND_ACCEPTED"]
+        print(f"from {username}: ", message)
+    else:
+        code = codes["INCOMPLETE_COMMAND_PARAMETERS"]
+        print("Incomplete parameters were passed.")
+
+    ret_cmd = {"command": "ret_code", "code_no": code}
+    return ret_cmd
 
 
 # temporary hardcoded values
@@ -94,7 +98,9 @@ while True:
         sent = sock.sendto(bytes(jsondata, "utf-8"), address)
 
     elif command == "msg":
-        ret_cmd = msg()
+        message = temp["message"]
+        username = temp["username"]
+        ret_cmd = msg(message, username)
         jsondata = json.dumps(ret_cmd)
         sent = sock.sendto(bytes(jsondata, "utf-8"), address)
 
