@@ -3,23 +3,53 @@ import sys
 import json
 from common import commands, codes, code_definitions
 
+# This function performs the registration operation of the application
 
-def register(username):
-    if username in users:
-        code = codes["USER_ALREADY_EXISTS"]
-        print(f"Username {username} already exists.")
+
+def register(username, users):
+
+    # If username isn't empty string
+    if username:
+        if username in users:
+            code = codes["USER_ALREADY_EXISTS"]
+            print(f"Username {username} already exists.")
+        else:
+            users.append(username)
+            code = codes["USER_NOT_REGISTERED"]
+            print(f"Username {username} just registered now.")
     else:
-        users.append(username)
-        code = codes["USER_NOT_REGISTERED"]
-        print(f"Username {username} just registered now.")
+        code = codes["INCOMPLETE_COMMAND_PARAMETERS"]
+        print("Incomplete parameters were passed.")
 
     ret_cmd = {"command": "ret_code", "code_no": code}
     print("Users in message board: ", users)
 
     return ret_cmd
 
+# This function performs the deregistration of an account in the apprlication
 
-def deregister():
+
+def deregister(username, users):
+
+    # If username isn't an empty string
+    if username:
+        if username in users:
+            users.remove(username)
+            code = codes["COMMAND_ACCEPTED"]
+            print(f"User {username} exiting...")
+        else:
+            code = codes["USER_NOT_REGISTERED"]
+            print("No account will be unregistered...")
+    else:
+        code = codes["INCOMPLETE_COMMAND_PARAMETERS"]
+        print("Incomplete parameters were passed.")
+
+    ret_cmd = {"command": "ret_code", "code_no": code}
+    print("Users in message board: ", users)
+    return ret_cmd
+
+
+def msg():
     pass
 
 
@@ -44,11 +74,32 @@ while True:
     data, address = sock.recvfrom(1024)
     # print(data)
     temp = json.loads(data)
+    print("Delete this later====")
+    print(type(address))
 
     # get command and perform action
     command = temp["command"]
     if command == "register":
         newUsername = temp['username']
-        ret_cmd = register(newUsername)
+        newUsername = newUsername.lower()  # checking is not case sensitive
+        ret_cmd = register(newUsername, users)
         jsondata = json.dumps(ret_cmd)
-        sent = sock.sendto(bytes(jsondata, "utf-8"))
+        sent = sock.sendto(bytes(jsondata, "utf-8"), address)
+
+    elif command == "deregister":
+        deleteUser = temp['username']
+        deleteUser = deleteUser.lower()
+        ret_cmd = deregister(deleteUser, users)
+        json = json.dumps(ret_cmd)
+        sent = sock.sendto(bytes(jsondata, "utf-8"), address)
+
+    elif command == "msg":
+        ret_cmd = msg()
+        jsondata = json.dumps(ret_cmd)
+        sent = sock.sendto(bytes(jsondata, "utf-8"), address)
+
+    else:
+        code = codes["COMMAND_UNKNOWN"]
+        ret_cmd = {"command": "ret_code", "code_no": code}
+        jsondata = json.dumps(ret_cmd)
+        sent = sock.sendto(bytes(jsondata, "utf-8"), address)
