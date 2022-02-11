@@ -3,9 +3,6 @@ import sys
 import json
 from common import commands, codes, code_definitions, deregister_message
 
-# ret_cmd = {"command": "ret_code", "code_no": 0}
-
-
 def register(username):
     # create register command to be sent to server
     register_cmd = {"command": commands["register"], "username": username}
@@ -21,6 +18,8 @@ def register(username):
         return 666
     elif returnedCmd["code_no"] == codes["USER_NOT_REGISTERED"]:
         print("Registered successfully!")
+    elif returnedCmd["code_no"] == codes["INCOMPLETE_COMMAND_PARAMETERS"]:
+        print("Incomplete parameters were passed.")
     return 0
 
 def deregister(username):
@@ -31,6 +30,17 @@ def deregister(username):
     sent = sock.sendto(bytes(jsondata, "utf-8"), (server_host, dest_port))
     data, server = sock.recvfrom(1024)
 
+    returnedCmd = json.loads(data)
+    # interpret the returned code from the server
+    if returnedCmd["code_no"] == codes["USER_NOT_REGISTERED"]:
+        print(f"User account is not registered yet.")
+        return 666
+    elif returnedCmd["code_no"] == codes["INCOMPLETE_COMMAND_PARAMETERS"]:
+        print("Incomplete parameters were passed.")
+        return 667
+    elif returnedCmd["code_no"] == codes["COMMAND_ACCEPTED"]:
+        print("Disconnected.")
+    return 0
 
 def send_message(username, message):
     if message == deregister_message:
@@ -42,7 +52,14 @@ def send_message(username, message):
     sent = sock.sendto(bytes(jsondata, "utf-8"), (server_host, dest_port))
     data, server = sock.recvfrom(1024)
 
-
+    returnedCmd = json.loads(data)
+    # interpret the returned code from the server
+    if returnedCmd["code_no"] == codes["INCOMPLETE_COMMAND_PARAMETERS"]:
+        print("Incomplete parameters were passed.")
+        return 666
+    elif returnedCmd["code_no"] == codes["COMMAND_ACCEPTED"]:
+        print("Message sent successfully.")
+    return 0
 
 
 # temporary hardcoded values

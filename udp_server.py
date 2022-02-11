@@ -26,7 +26,6 @@ def register(username, users):
 
 
 def deregister(username, users):
-
     # If username isn't an empty string
     if username:
         if username in users:
@@ -78,8 +77,6 @@ while True:
     data, address = sock.recvfrom(1024)
     # print(data)
     temp = json.loads(data)
-    print("Delete this later====")
-    print(type(address))
 
     # get command and perform action
     command = temp["command"]
@@ -100,7 +97,7 @@ while True:
     elif command == "msg":
         message = temp["message"]
         username = temp["username"]
-        ret_cmd = msg(message, username)
+        ret_cmd = msg(username, message)
         jsondata = json.dumps(ret_cmd)
         sent = sock.sendto(bytes(jsondata, "utf-8"), address)
 
