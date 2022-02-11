@@ -75,7 +75,6 @@ print("\nServer has started. Waiting for new messages.")
 while True:
     # Waiting for data to arrive
     data, address = sock.recvfrom(1024)
-    # print(data)
     temp = json.loads(data)
 
     # get command and perform action
@@ -91,7 +90,7 @@ while True:
         deleteUser = temp['username']
         deleteUser = deleteUser.lower()
         ret_cmd = deregister(deleteUser, users)
-        json = json.dumps(ret_cmd)
+        jsondata = json.dumps(ret_cmd)
         sent = sock.sendto(bytes(jsondata, "utf-8"), address)
 
     elif command == "msg":

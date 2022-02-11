@@ -77,5 +77,7 @@ if result == 0:
     while message != deregister_message:
         message = input("Enter message: ")
         send_message(username, message)
-
+else:
+    print("Unsuccessful registration, exiting")
+    exit()
 deregister(username)
