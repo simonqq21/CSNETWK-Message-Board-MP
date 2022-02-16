@@ -3,6 +3,7 @@ import sys
 import json
 from common import commands, codes, code_definitions, deregister_message
 
+
 def register(username):
     # create register command to be sent to server
     register_cmd = {"command": commands["register"], "username": username}
@@ -16,11 +17,12 @@ def register(username):
     if returnedCmd["code_no"] == codes["USER_ALREADY_EXISTS"]:
         print(f"User account already exists in chatroom!")
         return 666
-    elif returnedCmd["code_no"] == codes["USER_NOT_REGISTERED"]:
+    elif returnedCmd["code_no"] == codes["COMMAND_ACCEPTED"]:
         print("Registered successfully!")
     elif returnedCmd["code_no"] == codes["INCOMPLETE_COMMAND_PARAMETERS"]:
         print("Incomplete parameters were passed.")
     return 0
+
 
 def deregister(username):
     # create deregister command to be sent to server
@@ -42,11 +44,13 @@ def deregister(username):
         print("Disconnected.")
     return 0
 
+
 def send_message(username, message):
     if message == deregister_message:
         return
     # create message command to be sent to server
-    msg_cmd = {"command": commands["message"], "username": username, "message": message}
+    msg_cmd = {"command": commands["message"],
+               "username": username, "message": message}
     jsondata = json.dumps(msg_cmd)
     print(f"Sending message")
     sent = sock.sendto(bytes(jsondata, "utf-8"), (server_host, dest_port))
