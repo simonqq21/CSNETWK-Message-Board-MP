@@ -13,7 +13,7 @@ def register(username, users):
             print(f"Username {username} already exists.")
         else:
             users.append(username)
-            code = codes["USER_NOT_REGISTERED"]
+            code = codes["COMMAND_ACCEPTED"]
             print(f"Username {username} just registered now.")
     else:
         code = codes["INCOMPLETE_COMMAND_PARAMETERS"]
@@ -44,10 +44,20 @@ def deregister(username, users):
     return ret_cmd
 
 
-def msg(username, message):
-    if message:
-        code = codes["COMMAND_ACCEPTED"]
-        print(f"from {username}: ", message)
+def msg(username, message, users):
+    if username:
+        if username in users:
+            if message:
+                code = codes["COMMAND_ACCEPTED"]
+                print(f"from {username}: ", message)
+            else:
+                code = codes["INCOMPLETE_COMMAND_PARAMETERS"]
+                print("Incomplete parameters were passed.")
+        else:
+            # If client sent a message but the user is not registered
+            code = codes["USER_NOT_REGISTERED"]
+            print(
+                "User is currently unregistered. Please register before sending a message.")
     else:
         code = codes["INCOMPLETE_COMMAND_PARAMETERS"]
         print("Incomplete parameters were passed.")
@@ -79,7 +89,14 @@ while True:
 
     # get command and perform action
     command = temp["command"]
-    if command == "register":
+
+    if not command:
+        code = codes["INCOMPLETE_COMMAND_PARAMETERS"]
+        ret_cmd = {"command": "ret_code", "code_no": code}
+        jsondata = json.dumps(ret_cmd)
+        sent = sock.sendto(bytes(jsondata, "utf-8"), address)
+
+    elif command == "register":
         newUsername = temp['username']
         newUsername = newUsername.lower()  # checking is not case sensitive
         ret_cmd = register(newUsername, users)
@@ -96,7 +113,7 @@ while True:
     elif command == "msg":
         message = temp["message"]
         username = temp["username"]
-        ret_cmd = msg(username, message)
+        ret_cmd = msg(username, message, users)
         jsondata = json.dumps(ret_cmd)
         sent = sock.sendto(bytes(jsondata, "utf-8"), address)
 
