@@ -58,8 +58,7 @@ def msg(username, message, users):
         else:
             # If client sent a message but the user is not registered
             code = codes["USER_NOT_REGISTERED"]
-            print(
-                "User is currently unregistered. Please register before sending a message.")
+            print("An unregistered user is attempting to send a message. Please register before sending a message.")
     else:
         code = codes["INCOMPLETE_COMMAND_PARAMETERS"]
         print("Incomplete parameters were passed.")
