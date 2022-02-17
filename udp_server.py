@@ -108,6 +108,7 @@ while True:
     elif command == "deregister":
         deleteUser = temp['username']
         deleteUser = deleteUser.lower()
+        print(f"from {deleteUser}: bye")
         ret_cmd = deregister(deleteUser, users)
         jsondata = json.dumps(ret_cmd)
         sent = sock.sendto(bytes(jsondata, "utf-8"), address)
