@@ -49,7 +49,7 @@ def deregister(username):
 
 
 def send_message(username, message):
-    if message == deregister_message:
+    if message.lower() == deregister_message:
         return
 
     # create message command to be sent to server
@@ -64,6 +64,10 @@ def send_message(username, message):
     if returnedCmd["code_no"] == codes["INCOMPLETE_COMMAND_PARAMETERS"]:
         print("Incomplete parameters were passed.")
         return False
+
+    elif returnedCmd["code_no"] == codes["USER_NOT_REGISTERED"]:
+        sys.exit(
+            "You are currently unregistered. This is due to the server restarting. Please relaunch the program.")
 
     elif returnedCmd["code_no"] == codes["COMMAND_ACCEPTED"]:
         print("Message sent successfully.")
@@ -82,10 +86,9 @@ result = register(username)
 # continue if registration successful, exit otherwise
 if result:
     message = ""
-    while message != deregister_message:
+    while message.lower() != deregister_message:
         message = input("Enter message: ")
         send_message(username, message)
 else:
-    print("Unsuccessful registration, exiting...")
-    exit()
+    sys.exit("Unsuccessful registration, exiting...")
 deregister(username)
