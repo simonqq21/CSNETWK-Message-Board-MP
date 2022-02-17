@@ -5,7 +5,6 @@ from common import commands, codes, code_definitions
 
 
 def register(username, users):
-
     # If username isn't empty string
     if username:
         if username in users:
@@ -15,7 +14,7 @@ def register(username, users):
             users.append(username)
             code = codes["COMMAND_ACCEPTED"]
             print(f"Username {username} just registered now.")
-        print("Users in message board: ", users)
+        print("Users in message board:", users)
     else:
         code = codes["INCOMPLETE_COMMAND_PARAMETERS"]
         print("Incomplete parameters were passed. Enter a valid username.")
@@ -39,7 +38,11 @@ def deregister(username, users):
         print("Incomplete parameters were passed.")
 
     ret_cmd = {"command": "ret_code", "code_no": code}
-    print("Users in message board: ", users)
+    if (len(users) > 0):
+        print("Users in message board:", users)
+    else:
+        print("There are no users in the message board.")
+
     return ret_cmd
 
 
@@ -48,7 +51,7 @@ def msg(username, message, users):
         if username in users:
             if message:
                 code = codes["COMMAND_ACCEPTED"]
-                print(f"from {username}: ", message)
+                print(f"from {username}:", message)
             else:
                 code = codes["INCOMPLETE_COMMAND_PARAMETERS"]
                 print("Incomplete parameters were passed.")
