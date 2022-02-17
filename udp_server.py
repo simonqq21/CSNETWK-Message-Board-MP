@@ -69,11 +69,11 @@ def msg(username, message, users):
 
 
 # temporary hardcoded values
-listening_address = "172.16.0.20"
-listening_port = 8003
-# listening_address = input("Enter listening IP address: ")
-# listening_port = input("Enter listening port number: ")
-# listening_port = int(listening_port)
+# listening_address = "172.16.0.20"
+# listening_port = 8003
+listening_address = input("Enter listening IP address: ")
+listening_port = input("Enter listening port number: ")
+listening_port = int(listening_port)
 users = []
 
 # Create socket

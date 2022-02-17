@@ -71,10 +71,10 @@ def send_message(username, message):
 
 
 # temporary hardcoded values
-server_host = "172.16.0.20"
-dest_port = 8003
-# server_host = input("Enter IP address of message board server: ")
-# dest_port = int(input("Enter port number of message board server: "))
+# server_host = "172.16.0.20"
+# dest_port = 8003
+server_host = input("Enter IP address of message board server: ")
+dest_port = int(input("Enter port number of message board server: "))
 username = input("Enter preferred username: ")
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
