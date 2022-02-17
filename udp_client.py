@@ -14,14 +14,17 @@ def register(username):
 
     returnedCmd = json.loads(data)
     # interpret the returned code from the server
-    if returnedCmd["code_no"] == codes["USER_ALREADY_EXISTS"]:
-        print(f"User account already exists in chatroom!")
-        return 666
-    elif returnedCmd["code_no"] == codes["COMMAND_ACCEPTED"]:
+    if returnedCmd["code_no"] == codes["COMMAND_ACCEPTED"]:
         print("Registered successfully!")
+        return True
+
+    elif returnedCmd["code_no"] == codes["USER_ALREADY_EXISTS"]:
+        print(f"User account already exists in chatroom!")
+        return False
+
     elif returnedCmd["code_no"] == codes["INCOMPLETE_COMMAND_PARAMETERS"]:
         print("Incomplete parameters were passed.")
-    return 0
+        return False
 
 
 def deregister(username):
@@ -48,11 +51,11 @@ def deregister(username):
 def send_message(username, message):
     if message == deregister_message:
         return
+
     # create message command to be sent to server
     msg_cmd = {"command": commands["message"],
                "username": username, "message": message}
     jsondata = json.dumps(msg_cmd)
-    print(f"Sending message")
     sent = sock.sendto(bytes(jsondata, "utf-8"), (server_host, dest_port))
     data, server = sock.recvfrom(1024)
 
@@ -60,10 +63,11 @@ def send_message(username, message):
     # interpret the returned code from the server
     if returnedCmd["code_no"] == codes["INCOMPLETE_COMMAND_PARAMETERS"]:
         print("Incomplete parameters were passed.")
-        return 666
+        return False
+
     elif returnedCmd["code_no"] == codes["COMMAND_ACCEPTED"]:
         print("Message sent successfully.")
-    return 0
+        return True
 
 
 # temporary hardcoded values
@@ -76,12 +80,12 @@ username = input("Enter preferred username: ")
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 result = register(username)
 # continue if registration successful, exit otherwise
-if result == 0:
+if result:
     message = ""
     while message != deregister_message:
         message = input("Enter message: ")
         send_message(username, message)
 else:
-    print("Unsuccessful registration, exiting")
+    print("Unsuccessful registration, exiting...")
     exit()
 deregister(username)
