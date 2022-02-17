@@ -15,13 +15,12 @@ def register(username, users):
             users.append(username)
             code = codes["COMMAND_ACCEPTED"]
             print(f"Username {username} just registered now.")
+        print("Users in message board: ", users)
     else:
         code = codes["INCOMPLETE_COMMAND_PARAMETERS"]
-        print("Incomplete parameters were passed.")
+        print("Incomplete parameters were passed. Enter a valid username.")
 
     ret_cmd = {"command": "ret_code", "code_no": code}
-    print("Users in message board: ", users)
-
     return ret_cmd
 
 
