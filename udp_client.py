@@ -80,7 +80,7 @@ def send_message(username, message):
 server_host = input("Enter IP address of message board server: ")
 dest_port = int(input("Enter port number of message board server: "))
 username = input("Enter preferred username: ")
-
+username = username.lower()
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 result = register(username)
 # continue if registration successful, exit otherwise

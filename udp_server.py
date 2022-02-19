@@ -99,7 +99,6 @@ while True:
 
     elif command == "register":
         newUsername = temp['username']
-        newUsername = newUsername.lower()  # checking is not case sensitive
         ret_cmd = register(newUsername, users)
         jsondata = json.dumps(ret_cmd)
         sent = sock.sendto(bytes(jsondata, "utf-8"), address)
