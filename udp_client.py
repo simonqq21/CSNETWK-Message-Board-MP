@@ -19,7 +19,7 @@ def register(username):
         return True
 
     elif returnedCmd["code_no"] == codes["USER_ALREADY_EXISTS"]:
-        print(f"User account already exists in chatroom!")
+        print(f"User account already exists in chat room!")
         return False
 
     elif returnedCmd["code_no"] == codes["INCOMPLETE_COMMAND_PARAMETERS"]:
