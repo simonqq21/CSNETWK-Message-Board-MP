@@ -99,6 +99,7 @@ while True:
 
     elif command == "register":
         newUsername = temp['username']
+        newUsername = newUsername.lower()
         ret_cmd = register(newUsername, users)
         jsondata = json.dumps(ret_cmd)
         sent = sock.sendto(bytes(jsondata, "utf-8"), address)
@@ -114,6 +115,7 @@ while True:
     elif command == "msg":
         message = temp["message"]
         username = temp["username"]
+        username = username.lower()
         ret_cmd = msg(username, message, users)
         jsondata = json.dumps(ret_cmd)
         sent = sock.sendto(bytes(jsondata, "utf-8"), address)
